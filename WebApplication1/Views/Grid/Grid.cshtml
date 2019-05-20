@@ -1,0 +1,86 @@
+﻿
+@model WebApplication1.Models.IGrid
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Grid</title>
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+    </script>
+</head>
+<body>
+    <div>
+
+        <div class="grid-alert alert alert-info" role="alert">
+            <p><b>Welcome!</b> This application is the result of the programming exercise for the position of Software Developer at Abilis Solution.</p>
+            <br />
+            <p>If you want to configure the grid, use the URL parameters <b>matrix_size (3-15)</b> or <b>matrix_base (Decimal, Hex, Binary)</b>.</p>
+            <p>For example: https://webapplication120190520074243.azurewebsites.net?matrix_size=12&matrix_base=Hex</p>
+        </div>
+
+        @if (ViewBag.HasErrors)
+        {
+            <div class="grid-alert  alert alert-danger" role="alert">
+                <p><b>Invalid Parameters!</b></p>
+                <p>The parameters you provided are invalid. Please input a valid <b>matrix_size (3 to 15)</b> and <b>matrix_base (Decimal, Hex, Binary)</b>. </p>
+            </div>
+        }
+
+        <div class="text-center">
+            <h1 class="grid-type">
+                @ViewBag.GridType
+            </h1>
+            <h3 class="grid-dimensions text-primary">
+                @ViewBag.GridDimensions
+            </h3>
+        </div>
+
+
+        <table class="grid-table table table-bordered">
+
+            <tr>
+                <th class="text-center grid-header">X</th>
+                @for (int indexX = 0; indexX < Model.Grid.GetLength(0); indexX++)
+                {
+                    <th class="grid-header text-center bg-primary">@Model.Grid[indexX, 0]</th>
+                }
+            </tr>
+
+
+
+            @for (int indexX = 0; indexX < Model.Grid.GetLength(0); indexX++)
+            {
+                <tr>
+                    <th class="grid-header text-center bg-primary">@Model.Grid[indexX, 0]</th>
+                    @for (int indexY = 0; indexY < Model.Grid.GetLength(1); indexY++)
+                    {
+                        var classe = "";
+
+                        if (indexX == indexY)
+                        {
+                            classe = "bg-info";
+                        }
+                        else if (Model.PrimeNumbers.Contains(@Model.Grid[indexX, indexY]))
+                        {
+                            classe = "bg-danger";
+                        }
+
+                        <td class="@classe text-center grid-cell"><div class="cell-content grid-cell-content" data-toggle="tooltip" data-placement="top" title="@Model.Grid[indexX, 0] x @Model.Grid[0, indexY] = @Model.Grid[indexX, indexY]" style="">@Model.Grid[indexX, indexY]</div></td>
+
+                    }
+                </tr>
+            }
+            <caption class="text-danger">* Numbers in red are prime numbers.</caption>
+        </table>
+
+
+    </div>
+</body>
+</html>
